@@ -2,17 +2,23 @@ const express = require('express')
 const app = express()
 const port = 8000
 app.use(express.urlencoded({extended:true}))
-app.use(express.json)
+app.use(express.json())
+
 
 const session = require('express-session')
-app.use(session({ secret:'reactrestapi' , resave:false , saveUninitialized:false}))
+app.use(session({ secret:'reactrestapi' ,
+         resave:false , saveUninitialized:false}))
 
-app.get('./api/session/get' , (request,response) => {
-    let s = (request.session.email) ? true : false
+app.get('/api/session/get' , (request,response) => {
+    console.log('get')
+    let s = (request.session.email)? true : false
     response.json({signedIn : s})
 })
 
-app.post('./api/session/set' , (request,response) => {
+
+
+app.post('/api/session/set' , (request,response) => {
+    console.log('set')
     let email = request.body.email || ''
     let password = request.body.password || ''
     if(password === '12345'){
@@ -23,8 +29,11 @@ app.post('./api/session/set' , (request,response) => {
     }
 })
 
-app.get('./api/session/del' , (request,response)=>{
+app.get('/api/session/del' , (request,response)=>{
     request.session.destroy(err=>{
         response.json({signedIn:false})
     })
+
 })
+
+app.listen(port, () =>{console.log('Server listening on port '+ port)})
